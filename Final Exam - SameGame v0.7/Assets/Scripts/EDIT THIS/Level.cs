@@ -73,18 +73,17 @@ public class Level
 
         // ***** Students Start here ******
 
+      
 
-        
-       
-        
-//
-        for (int i = 0; i < cellCount_X; i++)
+        for (int x = 0; x < cellSize.x; x++)
         {
-            for (int j = 0; j < cellCount_Y; j++)
+            for (int y = 0; y < cellSize.y; y++)
             {
-                //GameObject.Instantiate(prefabs, origin, Quaternion.identity);
+
                 var gameObject = new Element(ElementType, seedForRandomNumberGenerator);
-                GameObject.Instantiate(prefabs[i], origin, Quaternion.identity);
+                
+                var GO = GameObject.Instantiate(gameObject.ElementType, origin, Quaternion.identity);
+                
                 // grid.CellCount[i, j] = grid.
 
                 //currentLevel = new Level(transform.position, cellSize, numberOfCellsPerRow, numberOfCellsPerColumn, randomNumberSeed, prefabs, transform);
@@ -112,8 +111,8 @@ public class Level
     /// <param name="worldPosition">Point in worldcoordinates (this position is not necessarily inside of the grid bounds).</param>
     public int HoverCells(Vector3 worldPosition)
     {
-        
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        worldPosition = Input.mousePosition;
+        Ray ray = Camera.main.ScreenPointToRay(worldPosition);
         RaycastHit hit;
 
         
