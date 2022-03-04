@@ -121,9 +121,11 @@ public class Level
         if (Physics.Raycast(ray, out hit) && (!Input.GetKeyDown(KeyCode.Mouse0)))
         {
             var obj = hit.transform.GetComponent<GameObject>();
+            var objIndex = elementGrid.PointToIndex(worldPosition);
             //elements next too
             // element 
-            if (true)
+            var objNeighbours = GetAdjacentCellsOfSameType(objIndex);
+            if (objNeighbours.Length > 0)
             {
                 objectsToSpin.Add(obj);
             }    
