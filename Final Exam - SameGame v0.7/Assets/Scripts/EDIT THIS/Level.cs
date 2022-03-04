@@ -291,9 +291,6 @@ public class Level
 ●                   Cursor is on valid (according to rules clickable) element (normal cursor)
 ●                   Cursor is being clicked
          */
-        if (CheckLevelState() == LevelState.NoElementsLeft)
-        {
-            GUI.skin.settings.cursorColor = Color.cyan;
-        }
+       
     }
 }
