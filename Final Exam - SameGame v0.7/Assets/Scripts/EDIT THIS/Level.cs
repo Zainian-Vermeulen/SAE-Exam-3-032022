@@ -1,10 +1,18 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Respresents a game level with a playground of cellCount_X * cellCount_Y elements.
 /// </summary>
+/// 
+
+
+
+
 public class Level
 {
+
+    [SerializeField] private ElementGrid elementGrid;
     /// <summary>
     /// Possible States of the currentLevel. The GameManager decides when to end the level (Win/Loose) upon the current state of the level.
     /// </summary>
@@ -23,7 +31,9 @@ public class Level
         /// </summary>
         FurtherMovesPossible
     };
-
+    
+    
+    
     //---Member---
     /// <summary>
     /// Returns the Playerscore (points the player has made).
@@ -62,6 +72,34 @@ public class Level
         points = 0;
 
         // ***** Students Start here ******
+
+
+        
+       
+        
+//
+        for (int i = 0; i < cellCount_X; i++)
+        {
+            for (int j = 0; j < cellCount_Y; j++)
+            {
+                //GameObject.Instantiate(prefabs, origin, Quaternion.identity);
+                var gameObject = new Element(ElementType, seedForRandomNumberGenerator);
+                GameObject.Instantiate(prefabs[i], origin, Quaternion.identity);
+                // grid.CellCount[i, j] = grid.
+
+                //currentLevel = new Level(transform.position, cellSize, numberOfCellsPerRow, numberOfCellsPerColumn, randomNumberSeed, prefabs, transform);
+
+            }
+        }
+        //var element = ElementType;
+
+    }
+
+    private GameObject elementType;
+    public GameObject ElementType
+    {
+        get { return elementType; }
+        set { elementType = value; }
     }
 
 
@@ -74,9 +112,35 @@ public class Level
     /// <param name="worldPosition">Point in worldcoordinates (this position is not necessarily inside of the grid bounds).</param>
     public int HoverCells(Vector3 worldPosition)
     {
+        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        
+        List<GameObject> objectsToSpin = new List<GameObject>();
+
+        if (Physics.Raycast(ray, out hit) && (!Input.GetKeyDown(KeyCode.Mouse0)))
+        {
+            var obj = hit.transform.GetComponent<GameObject>();
+            //elements next too
+            // element 
+            if (true)
+            {
+                objectsToSpin.Add(obj);
+            }    
+
+            foreach (GameObject item in objectsToSpin)
+            {
+                item.transform.Rotate(0,45,0);
+            }
+            Debug.Log("Object hit: " + hit.collider.name);
+        }
+
         // comment the out the following line
         return -99;
     }
+
+  
 
     /// <summary>
     /// This Function implements the funcionality for MouseClick events. It is called when a mouseclick was detected to make a move (remove adjacent Elements if there are more then two adjacent elements of the same type beginning at the worldPosition).
@@ -97,7 +161,18 @@ public class Level
     /// <param name="cellIndex">Index of the original cell.</param>
     public int[] GetAdjacentCellsOfSameType(int cellIndex)
     {
+
         // comment the out the following line
+        //return null;
+
+        //for (int i = 0; i < grid.CellCount; i++)
+        //{
+        //    if (true)
+        //    {
+
+        //    }
+        //}
+
         return null;
     }
 
@@ -122,7 +197,7 @@ public class Level
         var points = (numElements - 2) ^ 2;
         return points;
         // comment the out the following line
-
+        //return -99
     }
 
     /// <summary>
