@@ -75,12 +75,12 @@ public class Level
 
       
 
-        for (int x = 0; x < cellSize.x; x++)
+        for (int x = 0; x < cellCount_X; x++)
         {
-            for (int y = 0; y < cellSize.y; y++)
+            for (int y = 0; y < cellCount_Y; y++)
             {
 
-                var gameObject = new Element(ElementType, seedForRandomNumberGenerator);
+                var gameObject = new Element(_ElementType, seedForRandomNumberGenerator);
                 
                 var GO = GameObject.Instantiate(gameObject.ElementType, origin, Quaternion.identity);
                 
@@ -94,11 +94,11 @@ public class Level
 
     }
 
-    private GameObject elementType;
-    public GameObject ElementType
+    private GameObject _elementType;
+    public GameObject _ElementType
     {
-        get { return elementType; }
-        set { elementType = value; }
+        get { return _elementType; }
+        set { _elementType = value; }
     }
 
 
@@ -162,17 +162,15 @@ public class Level
     {
 
         // comment the out the following line
-        //return null;
+        //return null;        
+            var gridElement = elementGrid.GetNeighbours(cellIndex);
 
-        //for (int i = 0; i < grid.CellCount; i++)
-        //{
-        //    if (true)
-        //    {
-
-        //    }
-        //}
-
-        return null;
+            if (gridElement.Length > 0)
+            {
+                return gridElement;
+            }
+            else
+                return null;
     }
 
     /// <summary>
