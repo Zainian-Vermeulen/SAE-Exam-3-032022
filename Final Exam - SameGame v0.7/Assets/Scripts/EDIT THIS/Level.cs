@@ -104,58 +104,6 @@ public class Level
 
     //---Methods---
     /// <summary>
-    /// This Function implements the funcionality for MouseHover events. It is called each frame if no MouseClick is detected.
-    /// <BR><B>Attention:</B> The given worldPosition is not necessarily inside of the grid bounds.
-    /// </summary>
-    /// <returns> The Number of the hovered cells. </returns>
-    /// <param name="worldPosition">Point in worldcoordinates (this position is not necessarily inside of the grid bounds).</param>
-    public int HoverCells(Vector3 worldPosition)
-    {
-        worldPosition = Input.mousePosition;
-        Ray ray = Camera.main.ScreenPointToRay(worldPosition);
-        RaycastHit hit;
-
-        
-        List<GameObject> objectsToSpin = new List<GameObject>();
-
-        if (Physics.Raycast(ray, out hit) && (!Input.GetKeyDown(KeyCode.Mouse0)))
-        {
-            var obj = hit.transform.GetComponent<GameObject>();
-            var objIndex = elementGrid.PointToIndex(worldPosition);
-            //elements next too
-            // element 
-            var objNeighbours = GetAdjacentCellsOfSameType(objIndex);
-            if (objNeighbours.Length > 0)
-            {
-                objectsToSpin.Add(obj);
-            }    
-
-            foreach (GameObject item in objectsToSpin)
-            {
-                item.transform.Rotate(0,45,0);
-            }
-            Debug.Log("Object hit: " + hit.collider.name);
-        }
-
-        // comment the out the following line
-        return -99;
-    }
-
-  
-
-    /// <summary>
-    /// This Function implements the funcionality for MouseClick events. It is called when a mouseclick was detected to make a move (remove adjacent Elements if there are more then two adjacent elements of the same type beginning at the worldPosition).
-    /// <BR><B>Attention:</B> The given worldPosition is not necessarily inside of the grid bounds.
-    /// </summary>
-    /// <returns> The Number of the selected/removed cells. </returns>
-    /// <param name="worldPosition">Point in worldcoordinates (this position is not necessarily inside of the grid bounds).</param>
-    public int SelectCells(Vector3 worldPosition)
-    {
-        // comment the out the following line
-        return -99;
-    }
-
-    /// <summary>
     /// Returns the indices of adjacent cells with the same type (the type of the Element of the cell at cellIndex) as an array of integer indices.
     /// </summary>
     /// <returns>An array of integer indices of adjacent cells with the same type (including the selected cell) (<see cref="Element.ElementType"/>) or null (if the selected cell is empty).</returns>
@@ -174,7 +122,83 @@ public class Level
             else
                 return null;
     }
+    /// <summary>
+    /// This Function implements the funcionality for MouseHover events. It is called each frame if no MouseClick is detected.
+    /// <BR><B>Attention:</B> The given worldPosition is not necessarily inside of the grid bounds.
+    /// </summary>
+    /// <returns> The Number of the hovered cells. </returns>
+    /// <param name="worldPosition">Point in worldcoordinates (this position is not necessarily inside of the grid bounds).</param>
+    public int HoverCells(Vector3 worldPosition)
+    {
+        worldPosition = Input.mousePosition;
+        Ray ray = Camera.main.ScreenPointToRay(worldPosition);
+        RaycastHit hit;
 
+        
+        List<GameObject> objectsToSpin = new List<GameObject>();
+
+        if (Physics.Raycast(ray, out hit) && (!Input.GetKeyDown(KeyCode.Mouse0)))
+        {
+            GameObject obj = hit.transform.GetComponent<GameObject>();
+            var objIndex = elementGrid.PointToIndex(worldPosition);
+            //elements next too
+            // element 
+       
+            var objNeighbours = GetAdjacentCellsOfSameType(objIndex);
+            if (objNeighbours.Length > 0)
+            {
+                objectsToSpin.Add(obj);
+            }    
+
+            foreach (GameObject item in objectsToSpin)
+            {
+                item.transform.Rotate(0,45,0);
+            }
+            Debug.Log("Object hit: " + hit.collider.name);
+        }
+
+        return -99;
+        // comment the out the following line
+        //return -99;
+    }
+
+
+
+    /// <summary>
+    /// This Function implements the funcionality for MouseClick events. It is called when a mouseclick was detected to make a move (remove adjacent Elements if there are more then two adjacent elements of the same type beginning at the worldPosition).
+    /// <BR><B>Attention:</B> The given worldPosition is not necessarily inside of the grid bounds.
+    /// </summary>
+    /// <returns> The Number of the selected/removed cells. </returns>
+    /// <param name="worldPosition">Point in worldcoordinates (this position is not necessarily inside of the grid bounds).</param>
+    public int SelectCells(Vector3 worldPosition)
+    {
+        // comment the out the following line
+        //return -99;
+
+        worldPosition = Input.mousePosition;
+        Ray ray = Camera.main.ScreenPointToRay(worldPosition);
+        RaycastHit hit;
+
+
+        List<GameObject> objectsToSelect = new List<GameObject>();
+            var point = elementGrid.PointToIndex(worldPosition);
+            var adjacentCells = GetAdjacentCellsOfSameType(point);
+
+        if (Physics.Raycast(ray, out hit))
+        {
+            GameObject obj = hit.transform.GetComponent<GameObject>();
+            if (adjacentCells.Length > 2)
+            {
+                elementGrid.RemoveElements(adjacentCells);
+                objectsToSelect.Add(obj);
+                CalculatePoints(adjacentCells.Length);
+            }
+
+        }
+
+        return adjacentCells.Length;
+
+    }
     /// <summary>
     /// Checks the state of the current Level. 
     /// <returns><c>NoElementsLeft</c>: if there are no more (not empty) Elements left; <BR><c>NoMoreMovesPossible</c>: if there are no more moves possible (not empty Elements left, but only single Elements without neighbours of the same type); <BR><c>FurtherMovesPossible</c>: otherwise (see <see cref="Level.LevelState"/>).</returns>
