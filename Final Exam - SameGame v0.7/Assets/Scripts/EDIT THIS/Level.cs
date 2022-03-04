@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// Respresents a game level with a playground of cellCount_X * cellCount_Y elements.
@@ -82,8 +83,8 @@ public class Level
 
                 var gameObject = new Element(_ElementType, seedForRandomNumberGenerator);
                 
-                var GO = GameObject.Instantiate(gameObject.ElementType, origin, Quaternion.identity);
-                
+                //var GO = GameObject.Instantiate(gameObject.ElementType, origin, Quaternion.identity);
+                elementGrid.SetElement(y, gameObject);
                 // grid.CellCount[i, j] = grid.
 
                 //currentLevel = new Level(transform.position, cellSize, numberOfCellsPerRow, numberOfCellsPerColumn, randomNumberSeed, prefabs, transform);
@@ -157,7 +158,7 @@ public class Level
             Debug.Log("Object hit: " + hit.collider.name);
         }
 
-        return -99;
+        return objectsToSpin.Count;
         // comment the out the following line
         //return -99;
     }
@@ -248,6 +249,51 @@ public class Level
         {
             grid.DestroyGrid();
             grid = null;
+        }
+    }
+
+
+    public void ChangeCursor()
+    {
+        Vector3 mousePoint = Input.mousePosition;
+        
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            GUI.skin.settings.cursorColor = Color.cyan;
+        }
+        else if (HoverCells(mousePoint) <= 0)
+        {
+            GUI.skin.settings.cursorColor = Color.blue;
+        }
+        else if (EventSystem.current.IsPointerOverGameObject() && SelectCells(Input.mousePosition) < 1 )
+        {
+            GUI.skin.settings.cursorColor = Color.red;
+        }
+        else if (SelectCells(Input.mousePosition) > 1)
+        {
+            GUI.skin.settings.cursorColor = Color.white;
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            GUI.skin.settings.cursorColor = Color.black;
+
+        }
+
+
+        //if (!Physics.Raycast(ray, out currentIsPointerOverGameObject()))
+        //{ 
+        //}
+        /*
+         * Cursor outside the grid
+        ● Cursor is in grid, but currently not hovering an element
+●                   Cursor is in grid and hovering over an element, but the element has no other
+            adjacent elements of the same type (no possible move)
+●                   Cursor is on valid (according to rules clickable) element (normal cursor)
+●                   Cursor is being clicked
+         */
+        if (CheckLevelState() == LevelState.NoElementsLeft)
+        {
+            GUI.skin.settings.cursorColor = Color.cyan;
         }
     }
 }
