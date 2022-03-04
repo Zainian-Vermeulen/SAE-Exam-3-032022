@@ -205,8 +205,22 @@ public class Level
     /// </summary>
     public LevelState CheckLevelState()
     {
+
         // comment the out the following line
-        return LevelState.NoElementsLeft;
+        //return LevelState.NoElementsLeft;
+        for (int i = 0; i < grid.CellCount; i++)
+        {
+            if (!elementGrid.IsIndexValid(i))
+            {
+               return LevelState.NoElementsLeft;
+            }
+            else if (GetAdjacentCellsOfSameType(i).Length <= 1)
+            {
+                return LevelState.NoMoreMovesPossible; ;
+            }
+        }
+
+        return LevelState.FurtherMovesPossible;
     }
 
     /// <summary>
