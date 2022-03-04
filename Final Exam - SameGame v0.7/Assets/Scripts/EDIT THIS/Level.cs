@@ -118,8 +118,11 @@ public class Level
     /// <param name="numElements">Number of elements.</param>
     public int CalculatePoints(int numElements)
     {
+        //Points = (Amount of Stones -2)² (a)
+        var points = (numElements - 2) ^ 2;
+        return points;
         // comment the out the following line
-        return -99;
+
     }
 
     /// <summary>
